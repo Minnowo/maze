@@ -1,0 +1,9 @@
+-I./include
+-I./thirdparty/glad/include
+-I./thirdparty/glm
+-I./thirdparty/gl2d/include
+-I./thirdparty/glfw-3.3.2/include
+-I./thirdparty/imgui-docking/imgui
+-I./thirdparty/raudio/include
+-I./thirdparty/stb_image/include
+-I./thirdparty/stb_truetype/include
