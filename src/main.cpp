@@ -85,30 +85,29 @@ int main(void) {
     srand(time(NULL));
 
     World world;
-    Cell cells[M_WIDTH * M_HEIGHT] = {};
+    Cell  cells[M_WIDTH * M_HEIGHT] = {};
 
     world.player = {
         .x = 0,
         .y = 0,
         .movecooldown = 0.1
-        // .movecooldown = 0.5
     };
 
-    bool a = 0;
-    world.map = { 
+    world.map = {
         .width = M_WIDTH,
         .height = M_HEIGHT,
-        .cells = cells
-    };
-    world.screenWidth = 1024;
+        .cells = cells};
+
+    world.screenWidth  = 1024;
     world.screenHeight = 1024;
-    world.cellSize = 25;
-    world.wallWidth = 4;
-    
+    world.cellSize     = 25;
+    world.wallWidth    = 4;
+
     world.map.buildRandomMaze();
 
-    bool isSolved = false;
+    bool       isSolved = false;
     SolveStrat strategy = SolveStrat::FLOODFILL;
+
     std::stack<glm::i32vec2> visitHistory;
     std::queue<glm::i32vec2> floodnext;
 
@@ -141,19 +140,23 @@ int main(void) {
             switch (strategy) {
 
             case DFS:
+
                 if (isSolved) {
                     dfs_show_path(world.map, world.player, visitHistory);
                 } else {
                     dfs_solve_maze(world.map, world.player, visitHistory, isSolved);
                 }
+
                 break;
 
             case FLOODFILL:
+
                 if (isSolved) {
                     floodfill_show_path(world.map, world.player);
                 } else {
                     floodfill_solve_maze(world.map, world.player, floodnext, isSolved);
                 }
+
                 break;
             }
         }

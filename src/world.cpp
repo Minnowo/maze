@@ -5,7 +5,7 @@
 #include "world.hpp"
 
 Direction opposite_direction(Direction d) {
-    switch(d){
+    switch (d) {
     case NORTH:
         return Direction::SOUTH;
     case SOUTH:
@@ -20,12 +20,15 @@ Direction opposite_direction(Direction d) {
 void Cell::addWall(Direction d) {
     walls[d] = 1;
 }
+
 void Cell::removeWall(Direction d) {
     walls[d] = 0;
 }
+
 bool Cell::wallAt(Direction d) {
     return walls[d];
 }
+
 bool Cell::wallOpposite(Direction d) {
     return wallAt(opposite_direction(d));
 }
@@ -107,22 +110,14 @@ static void build_maze_recur(Map* map, int x, int y) {
             continue;
         }
 
-        int newx = x;
-        int newy = y;
+        int nx = x;
+        int ny = y;
 
         switch (move_to) {
-        case NORTH:
-            newy--;
-            break;
-        case SOUTH:
-            newy++;
-            break;
-        case EAST:
-            newx++;
-            break;
-        case WEST:
-            newx--;
-            break;
+        case NORTH: ny--; break;
+        case SOUTH: ny++; break;
+        case EAST : nx++; break;
+        case WEST : nx--; break;
         }
 
         if (!cell->wallAt(move_to)) {
@@ -132,7 +127,7 @@ static void build_maze_recur(Map* map, int x, int y) {
             continue;
         }
 
-        Cell* newCell = map->at(newx, newy);
+        Cell* newCell = map->at(nx, ny);
 
         if (newCell->visited || !newCell->wallOpposite(move_to)) {
 
@@ -147,7 +142,7 @@ static void build_maze_recur(Map* map, int x, int y) {
 
         newCell->removeWall(opposite_direction(move_to));
 
-        build_maze_recur(map, newx, newy);
+        build_maze_recur(map, nx, ny);
     }
 }
 
@@ -155,7 +150,7 @@ void Map::buildRandomMaze() {
 
     size_t len = this->length();
 
-    for(int i = 0; i < len; i++) {
+    for (int i = 0; i < len; i++) {
 
         this->cells[i] = {.color = ColorBG, .walls = {1, 1, 1, 1}, .visited = false};
     }
@@ -166,22 +161,19 @@ void Map::buildRandomMaze() {
     build_maze_recur(this, start_x, start_y);
 
     for (int i = 0; i < this->length(); i++) {
-        this->cells[i].visited = false;
+        this->cells[i].visited  = false;
         this->cells[i].distance = 0;
     }
 
     this->at(start_x, start_y)->color = Colors_Green;
-    this->finishPos = glm::i32vec2(start_x, start_y);
+    this->finishPos                   = glm::i32vec2(start_x, start_y);
 }
-
-
-
 
 static void error_callback(int error, const char* description) {
     std::cout << "Error: " << error << " " << description << "\n";
 }
 
-void World::initGLFW(){
+void World::initGLFW() {
 
     glfwSetErrorCallback(error_callback);
 
@@ -217,8 +209,7 @@ void World::initGL2D() {
     this->r2d.create();
 }
 
-
-void World::updateTime(){
+void World::updateTime() {
 
     double currentTime = glfwGetTime();
 
@@ -270,7 +261,7 @@ void World::renderCell(Cell* cell, int x, int y) {
     }
 }
 
-void World::renderMap(){
+void World::renderMap() {
 
     for (int y = 0; y < map.height; y++) {
 
@@ -283,7 +274,9 @@ void World::renderMap(){
     }
 }
 
-void World::renderPlayer(){
+void World::renderPlayer() {
 
-    r2d.renderRectangle({player.x * this->cellSize, player.y * this->cellSize, this->cellSize, this->cellSize}, ColorPlayer);
+    r2d.renderRectangle(
+        {player.x * this->cellSize, player.y * this->cellSize, this->cellSize, this->cellSize}, ColorPlayer
+    );
 }

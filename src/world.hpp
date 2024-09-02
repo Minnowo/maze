@@ -24,10 +24,10 @@ struct Cell {
         bool          visited;
         int           distance;
 
-        void addWall(Direction d);
-        void removeWall(Direction d);
-        bool wallAt(Direction d);
-        bool wallOpposite(Direction d);
+        void           addWall(Direction d);
+        void           removeWall(Direction d);
+        bool           wallAt(Direction d);
+        bool           wallOpposite(Direction d);
         std::bitset<4> wallDirections(Direction d);
 };
 
@@ -42,9 +42,9 @@ struct Player {
 struct Map {
 
         glm::i32vec2 finishPos;
-        int   width;
-        int   height;
-        Cell* cells;
+        int          width;
+        int          height;
+        Cell*        cells;
 
         bool   canMove(int x, int y, Direction d);
         bool   canMove(int x, int y);

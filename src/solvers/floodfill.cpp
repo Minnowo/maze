@@ -27,8 +27,8 @@ void floodfill_show_path(Map& map, Player& player) {
         switch (dir) {
         case NORTH: ny--; break;
         case SOUTH: ny++; break;
-        case EAST: nx++; break;
-        case WEST: nx--; break;
+        case EAST : nx++; break;
+        case WEST : nx--; break;
         }
 
         Cell* cell = map.at(nx, ny);
@@ -69,7 +69,7 @@ void floodfill_solve_maze(Map& map, Player& player, std::queue<glm::i32vec2>& hi
     Cell* cell = map.at(x, y);
 
     cell->visited = true;
-    cell->color = ColorSearch;
+    cell->color   = ColorSearch;
 
     std::bitset<4> directions = {0b1111};
 
@@ -96,27 +96,27 @@ void floodfill_solve_maze(Map& map, Player& player, std::queue<glm::i32vec2>& hi
 
         Direction move_to = Direction(i);
 
-        int newx = x;
-        int newy = y;
+        int nx = x;
+        int ny = y;
 
         switch (move_to) {
-        case NORTH: newy--; break;
-        case SOUTH: newy++; break;
-        case EAST: newx++; break;
-        case WEST: newx--; break;
+        case NORTH: ny--; break;
+        case SOUTH: ny++; break;
+        case EAST : nx++; break;
+        case WEST : nx--; break;
         }
 
-        if (cell->wallAt(move_to)) 
+        if (cell->wallAt(move_to))
             continue;
 
-        Cell* newCell = map.at(newx, newy);
+        Cell* newCell = map.at(nx, ny);
 
         if (newCell->visited || newCell->wallOpposite(move_to))
             continue;
 
         newCell->distance = cell->distance + 1;
 
-        history.push({newx, newy});
+        history.push({nx, ny});
     }
 
     if (history.empty())
@@ -128,5 +128,4 @@ void floodfill_solve_maze(Map& map, Player& player, std::queue<glm::i32vec2>& hi
 
     player.x = pos.x;
     player.y = pos.y;
-    // player.lastmoved = 0;
 }

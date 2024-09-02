@@ -40,12 +40,12 @@ void dfs_solve_maze(Map& map, Player& player, std::stack<glm::i32vec2>& history,
         isSolved = true;
 
         return;
-        }
+    }
 
     Cell* cell = map.at(x, y);
 
     cell->visited = true;
-    cell->color = ColorSearch;
+    cell->color   = ColorSearch;
 
     std::bitset<4> directions = {0b1111};
 
@@ -65,33 +65,33 @@ void dfs_solve_maze(Map& map, Player& player, std::stack<glm::i32vec2>& history,
         directions.reset(Direction::SOUTH);
     }
 
-    for(int i = 0; i < 4; i++ ) {
+    for (int i = 0; i < 4; i++) {
 
         if (!directions.test(i))
             continue;
 
         Direction move_to = Direction(i);
 
-        int newx = x;
-        int newy = y;
+        int nx = x;
+        int ny = y;
 
         switch (move_to) {
-        case NORTH: newy--; break;
-        case SOUTH: newy++; break;
-        case EAST: newx++; break;
-        case WEST: newx--; break;
+        case NORTH: ny--; break;
+        case SOUTH: ny++; break; 
+        case EAST : nx++; break;
+        case WEST : nx--; break;
         }
 
         if (cell->wallAt(move_to))
             continue;
 
-        Cell* newCell = map.at(newx, newy);
+        Cell* newCell = map.at(nx, ny);
 
         if (newCell->visited || newCell->wallOpposite(move_to))
             continue;
 
-        player.x = newx;
-        player.y = newy;
+        player.x = nx;
+        player.y = ny;
 
         history.push({x, y});
 
