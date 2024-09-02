@@ -30,6 +30,10 @@ bool Cell::wallOpposite(Direction d) {
     return wallAt(opposite_direction(d));
 }
 
+bool Map::canMove(int x, int y) {
+    return x >= 0 && y >= 0 && x < this->width && y < this->height;
+}
+
 bool Map::canMove(int x, int y, Direction d) {
 
     if (this->at(x, y)->wallAt(d)) {
@@ -163,10 +167,11 @@ void Map::buildRandomMaze() {
 
     for (int i = 0; i < this->length(); i++) {
         this->cells[i].visited = false;
+        this->cells[i].distance = 0;
     }
 
     this->at(start_x, start_y)->color = Colors_Green;
-    this->finishPos = this->rawIndex(start_x, start_y);
+    this->finishPos = glm::i32vec2(start_x, start_y);
 }
 
 

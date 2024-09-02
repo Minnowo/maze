@@ -75,6 +75,10 @@ target_sources("${CMAKE_PROJECT_NAME}" PRIVATE
     ./src/world.cpp
     ./src/world.hpp
     ./src/openglErrorReporting.cpp
+
+    ./src/solvers/solvers.hpp
+    ./src/solvers/dfs.cpp
+    ./src/solvers/floodfill.cpp
 )
 
 
