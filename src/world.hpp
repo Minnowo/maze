@@ -42,9 +42,11 @@ struct Player {
 struct Map {
 
         glm::i32vec2 finishPos;
-        int          width;
-        int          height;
         Cell*        cells;
+
+        int percentLessWalls;
+        int width;
+        int height;
 
         bool   canMove(int x, int y, Direction d);
         bool   canMove(int x, int y);

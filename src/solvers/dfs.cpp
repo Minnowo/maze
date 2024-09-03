@@ -4,14 +4,14 @@
 
 #include "solvers.hpp"
 
-void dfs_show_path(Map& map, Player& player, std::stack<glm::i32vec2>& history) {
+bool dfs_show_path(Map& map, Player& player, std::stack<glm::i32vec2>& history) {
 
     if (player.lastmoved < player.movecooldown) {
-        return;
+        return true;
     }
 
     if (history.empty()) {
-        return;
+        return true;
     }
 
     glm::i32vec2 pos = history.top();
@@ -24,6 +24,8 @@ void dfs_show_path(Map& map, Player& player, std::stack<glm::i32vec2>& history) 
     Cell* cell = map.at(pos.x, pos.y);
 
     cell->color = ColorPath;
+
+    return false;
 }
 
 void dfs_solve_maze(Map& map, Player& player, std::stack<glm::i32vec2>& history, bool& isSolved) {
@@ -72,6 +74,9 @@ void dfs_solve_maze(Map& map, Player& player, std::stack<glm::i32vec2>& history,
 
         Direction move_to = Direction(i);
 
+        if (cell->wallAt(move_to))
+            continue;
+
         int nx = x;
         int ny = y;
 
@@ -82,12 +87,12 @@ void dfs_solve_maze(Map& map, Player& player, std::stack<glm::i32vec2>& history,
         case WEST : nx--; break;
         }
 
-        if (cell->wallAt(move_to))
-            continue;
-
         Cell* newCell = map.at(nx, ny);
 
-        if (newCell->visited || newCell->wallOpposite(move_to))
+        if (newCell->visited)
+            continue;
+
+        if (newCell->wallOpposite(move_to))
             continue;
 
         player.x = nx;

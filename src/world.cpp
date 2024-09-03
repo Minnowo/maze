@@ -129,9 +129,21 @@ static void build_maze_recur(Map* map, int x, int y) {
 
         Cell* newCell = map->at(nx, ny);
 
-        if (newCell->visited || !newCell->wallOpposite(move_to)) {
+        if (!newCell->wallOpposite(move_to)) {
 
             directions.reset(move_to);
+
+            continue;
+        }
+
+        if (newCell->visited) {
+
+            directions.reset(move_to);
+
+            if ((rand() % 100) < map->percentLessWalls) {
+                cell->removeWall(move_to);
+                newCell->removeWall(opposite_direction(move_to));
+            }
 
             continue;
         }

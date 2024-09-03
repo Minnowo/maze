@@ -1,10 +1,10 @@
 
 #include "solvers.hpp"
 
-void floodfill_show_path(Map& map, Player& player) {
+bool floodfill_show_path(Map& map, Player& player) {
 
     if (player.lastmoved < player.movecooldown) {
-        return;
+        return false;
     }
 
     int x = player.x;
@@ -13,6 +13,15 @@ void floodfill_show_path(Map& map, Player& player) {
     Cell* cell = map.at(x, y);
 
     int maxDistance = cell->distance;
+
+    if (maxDistance == 0) {
+
+        cell->color = ColorPath;
+        player.x    = x;
+        player.y    = y;
+
+        return true;
+    }
 
     for (int i = 0; i < 4; i++) {
 
@@ -45,9 +54,10 @@ void floodfill_show_path(Map& map, Player& player) {
 
             cell->color = ColorPath;
 
-            return;
+            return false;
         }
     }
+    return false;
 }
 
 void floodfill_solve_maze(Map& map, Player& player, std::queue<glm::i32vec2>& history, bool& isSolved) {
@@ -96,6 +106,9 @@ void floodfill_solve_maze(Map& map, Player& player, std::queue<glm::i32vec2>& hi
 
         Direction move_to = Direction(i);
 
+        if (cell->wallAt(move_to))
+            continue;
+
         int nx = x;
         int ny = y;
 
@@ -106,15 +119,18 @@ void floodfill_solve_maze(Map& map, Player& player, std::queue<glm::i32vec2>& hi
         case WEST : nx--; break;
         }
 
-        if (cell->wallAt(move_to))
-            continue;
-
         Cell* newCell = map.at(nx, ny);
 
-        if (newCell->visited || newCell->wallOpposite(move_to))
+        if (newCell->visited)
+            continue;
+
+        if (newCell->wallOpposite(move_to))
             continue;
 
         newCell->distance = cell->distance + 1;
+
+        // don't fill the q with a bunch of garbage
+        newCell->visited = true;
 
         history.push({nx, ny});
     }
