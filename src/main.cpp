@@ -232,6 +232,9 @@ int main(int argc, char* argv[]) {
     bool reset   = false;
     bool autoRun = false;
 
+    float resetAfter = 2;
+    float resetAt = 0;
+
     float solveSpeed = 0;
     float solveLastTime = 0;
     bool       isSolved = false;
@@ -263,6 +266,7 @@ int main(int argc, char* argv[]) {
 
         world.player.lastmoved += world.deltaTime;
         solveLastTime += world.deltaTime;
+        resetAt += world.deltaTime;
 
         // player input
         if (world.player.lastmoved > world.player.movecooldown) {
@@ -323,10 +327,14 @@ int main(int argc, char* argv[]) {
                     break;
                 }
             }
+
+            if (!reset) {
+                resetAt = 0;
+            }
         }
 
         // map reset
-        if (autoRun && reset || glfwGetKey(world.glwin, GLFW_KEY_R)) {
+        if ((resetAt > resetAfter) && autoRun && reset || glfwGetKey(world.glwin, GLFW_KEY_R)) {
 
             reset    = false;
             isSolved = false;
