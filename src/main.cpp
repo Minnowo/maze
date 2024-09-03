@@ -35,6 +35,7 @@ struct Args {
     int width;
     int height;
     int percentLessWalls;
+    int algo;
 };
 
 std::string pad_left(std::string const& str, size_t s)
@@ -143,6 +144,17 @@ int handle_flags( Args& args, const char* flag_str, const char* flag_value) {
 
                 return 0;
 
+        case 'a':
+
+            DIE_IF_NULL(flag_value, "algorithm requires a number from 0-1");
+
+            args.algo = atoi(flag_value);
+
+            if (args.algo < 0 || args.algo > 1)
+                DIE("algorithm requires a number from 0-1");
+
+            return 1;
+
         case 'l':
 
             DIE_IF_NULL(flag_value, "less-walls requires a number from 0-100");
@@ -153,6 +165,7 @@ int handle_flags( Args& args, const char* flag_str, const char* flag_value) {
                 DIE("less-walls requires a number from 0-100");
 
             return 1;
+
         case 'w':
 
             DIE_IF_NULL(flag_value, "--width requires a width value > 0");
@@ -194,7 +207,7 @@ void handle_start_args(Args& config, int argc, char* argv[]) {
 
 int main(int argc, char* argv[]) {
 
-    Args args = {0, 0, 0};
+    Args args = {0, 0, 0, int(SolveStrat::FLOODFILL)};
 
     handle_start_args(args, argc, argv);
 
@@ -238,7 +251,7 @@ int main(int argc, char* argv[]) {
     float solveSpeed = 0;
     float solveLastTime = 0;
     bool       isSolved = false;
-    SolveStrat strategy = SolveStrat::FLOODFILL;
+    SolveStrat strategy = SolveStrat(args.algo);
 
     std::stack<glm::i32vec2> visitHistory;
     std::queue<glm::i32vec2> floodnext;

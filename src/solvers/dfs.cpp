@@ -98,6 +98,9 @@ void dfs_solve_maze(Map& map, Player& player, std::stack<glm::i32vec2>& history,
         player.x = nx;
         player.y = ny;
 
+        newCell->distance = cell->distance + 1;
+        newCell->visited  = true;
+
         history.push({x, y});
 
         return;
