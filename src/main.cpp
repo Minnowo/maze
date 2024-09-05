@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <gl2d/gl2d.h>
 #include <glad/glad.h>
+#include <unistd.h>
 #include "glm/fwd.hpp"
 
 #include "solvers/solvers.hpp"
@@ -44,6 +45,23 @@ std::string pad_left(std::string const& str, size_t s)
         return std::string(s-str.size(), ' ') + str;
     else
         return str;
+}
+
+bool uDetachFromTerminal() {
+
+    int pid = fork();
+
+    if (pid > 0)
+        exit(EXIT_SUCCESS);
+
+    if (pid < 0)
+        return false;
+
+    freopen("/dev/null", "r", stdin);
+    freopen("/dev/null", "w", stdout);
+    freopen("/dev/null", "w", stderr);
+
+    return true;
 }
 
 void do_player_move(GLFWwindow* window, Map& map, Player& player) {
@@ -207,6 +225,8 @@ void handle_start_args(Args& config, int argc, char* argv[]) {
 
 int main(int argc, char* argv[]) {
 
+    uDetachFromTerminal();
+
     Args args = {0, 0, 0, int(SolveStrat::FLOODFILL)};
 
     handle_start_args(args, argc, argv);
@@ -271,8 +291,14 @@ int main(int argc, char* argv[]) {
         world.updateTime();
 
         // scale the map
-        if (world.map.width > world.map.height) {
-            world.cellSize = world.screenWidth / world.map.width;
+        if (world.screenWidth < world.screenHeight) {
+            if (world.map.width > world.map.height) {
+                world.cellSize = world.screenWidth / world.map.height;
+            } else {
+                world.cellSize = world.screenWidth / world.map.width;
+            }
+        } else if (world.map.width > world.map.height) {
+            world.cellSize = world.screenHeight / world.map.height;
         } else {
             world.cellSize = world.screenHeight / world.map.width;
         }
@@ -351,6 +377,9 @@ int main(int argc, char* argv[]) {
 
             reset    = false;
             isSolved = false;
+
+            world.player.x = rand() % world.map.width;
+            world.player.y = rand() % world.map.height;
 
             world.map.buildRandomMaze();
 

@@ -11,7 +11,7 @@
 #define ColorWall NEWCOLOR(0xd4, 0xd4, 0xd4)
 #define ColorPlayer NEWCOLOR(0xFf, 0xc1, 0xff)
 #define ColorPath NEWCOLOR(0x81, 0xcf, 0xff)
-#define ColorSearch NEWCOLOR(0x80, 0x80, 0x80)
+#define ColorSearch NEWCOLOR(0xFF, 0x80, 0x80)
 
 typedef enum { NORTH = 0, SOUTH, EAST, WEST } Direction;
 
